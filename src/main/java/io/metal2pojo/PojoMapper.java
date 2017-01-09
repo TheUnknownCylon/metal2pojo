@@ -77,8 +77,8 @@ public final class PojoMapper {
 			field.set(pojo, values);
 
 		} else if (Optional.class.isAssignableFrom(field.getType())) {
-			final MapContext context = toContext(field, graph);
 			try {
+				final MapContext context = toContext(field, graph);
 				field.set(pojo, Optional.of(converter.convert(context)));
 			} catch (final TokenNotFoundException e) {
 				field.set(pojo, Optional.empty());
@@ -123,7 +123,7 @@ public final class PojoMapper {
 
 	private static MapContext toContext(final Field field, final GraphContext graph) throws TokenNotFoundException {
 		if (targetIsPojo(field)) {
-			final String pojoTokenName = pojoTokenName(field.getType());
+			final String pojoTokenName = pojoTokenName(getTargetClass(field));
 			return new MapContext(getTargetClass(field), graph.subGraph(pojoTokenName));
 		} else {
 			final String name = field.getName();

@@ -14,10 +14,7 @@ public class DefaultConverter implements MetalTypeConverter<Object> {
 
 		if (context.parseValue() != null) {
 			final ParseValue value = context.parseValue();
-
-			if (value == null) {
-				throw new TokenNotFoundException();
-			} else if (type == Long.class || type == long.class) {
+			if (type == Long.class || type == long.class) {
 				return value.asNumeric().longValue();
 			} else if (type == String.class) {
 				return value.asString();
@@ -26,8 +23,10 @@ public class DefaultConverter implements MetalTypeConverter<Object> {
 			} else {
 				throw new IllegalStateException("Unknown type to interpret: " + type + " for value: " + value);
 			}
-		} else {
+		} else if (context.parseGraph() != null) {
 			return PojoMapper.fillPojo(type, context.parseGraph());
+		} else {
+			throw new TokenNotFoundException();
 		}
 	}
 }

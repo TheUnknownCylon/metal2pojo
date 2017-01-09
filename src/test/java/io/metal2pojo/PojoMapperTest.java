@@ -16,6 +16,9 @@ import io.metal2pojo.testtokens.RepnToken;
 import io.metal2pojo.testtokens.SimpleSequenceToken;
 import io.metal2pojo.testtokens.TokenWithTokenReference;
 import io.metal2pojo.testtokens.TokenWithTwoIdenticalSubtokens;
+import io.metal2pojo.testtokens.cho.ChoParseGraphToken;
+import io.metal2pojo.testtokens.cho.ChoParseMixedToken;
+import io.metal2pojo.testtokens.cho.ChoParseValueToken;
 import io.parsingdata.metal.data.Environment;
 
 public class PojoMapperTest {
@@ -46,11 +49,71 @@ public class PojoMapperTest {
 	}
 
 	@Test
+	public void testChoParseValueToken() throws IOException, TokenNotFoundException, TokenConversionException {
+		{
+			final Environment env = stream(1);
+			final ChoParseValueToken pojo = PojoMapper.fillPojo(ChoParseValueToken.class, ChoParseValueToken.TOKEN, env, le());
+			assertThat(pojo.value1.isPresent(), is(true));
+			assertThat(pojo.value2.isPresent(), is(false));
+			assertThat(pojo.value1.get(), is(equalTo(1)));
+		}
+		{
+
+			final Environment env = stream(10);
+			final ChoParseValueToken pojo = PojoMapper.fillPojo(ChoParseValueToken.class, ChoParseValueToken.TOKEN, env, le());
+			assertThat(pojo.value1.isPresent(), is(false));
+			assertThat(pojo.value2.isPresent(), is(true));
+			assertThat(pojo.value2.get(), is(equalTo(10L)));
+		}
+	}
+
+	@Test
+	public void testChoParseGraphToken() throws IOException, TokenNotFoundException, TokenConversionException {
+		{
+			final Environment env = stream(1);
+			final ChoParseGraphToken pojo = PojoMapper.fillPojo(ChoParseGraphToken.class, ChoParseGraphToken.TOKEN, env,
+					le());
+			assertThat(pojo.value1.isPresent(), is(true));
+			assertThat(pojo.value2.isPresent(), is(false));
+			assertThat(pojo.value1.get().value1, is(equalTo(1)));
+		}
+		{
+
+			final Environment env = stream(10);
+			final ChoParseGraphToken pojo = PojoMapper.fillPojo(ChoParseGraphToken.class, ChoParseGraphToken.TOKEN, env,
+					le());
+			assertThat(pojo.value1.isPresent(), is(false));
+			assertThat(pojo.value2.isPresent(), is(true));
+			assertThat(pojo.value2.get().value1, is(equalTo(10L)));
+		}
+	}
+
+	@Test
+	public void testChoMixedToken() throws IOException, TokenNotFoundException, TokenConversionException {
+		{
+			final Environment env = stream(1);
+			final ChoParseMixedToken pojo = PojoMapper.fillPojo(ChoParseMixedToken.class, ChoParseMixedToken.TOKEN, env,
+					le());
+			assertThat(pojo.value1.isPresent(), is(true));
+			assertThat(pojo.value2.isPresent(), is(false));
+			assertThat(pojo.value1.get(), is(equalTo(1)));
+		}
+		{
+
+			final Environment env = stream(10);
+			final ChoParseMixedToken pojo = PojoMapper.fillPojo(ChoParseMixedToken.class, ChoParseMixedToken.TOKEN, env,
+					le());
+			assertThat(pojo.value1.isPresent(), is(false));
+			assertThat(pojo.value2.isPresent(), is(true));
+			assertThat(pojo.value2.get().value1, is(equalTo(10L)));
+		}
+	}
+
+	@Test
 	public void duplicateDefName() throws IOException, TokenNotFoundException, TokenConversionException {
 		final Environment env = stream(1, 2, 3);
 		final TokenWithTokenReference pojo = PojoMapper.fillPojo(TokenWithTokenReference.class,
-				TokenWithTokenReference.TOKEN, env,
-				le());
+				TokenWithTokenReference.TOKEN, env, le());
 		assertThat(pojo.def1, is(equalTo(1)));
 		assertThat(pojo.seq1.def1, is(equalTo(2)));
 		assertThat(pojo.seq1.def2, is(equalTo(3)));
@@ -60,8 +123,7 @@ public class PojoMapperTest {
 	public void duplicateDefNameRev() throws IOException, TokenNotFoundException, TokenConversionException {
 		final Environment env = stream(1, 2, 3);
 		final TokenWithTokenReference pojoRef = PojoMapper.fillPojo(TokenWithTokenReference.class,
-				TokenWithTokenReference.TOKENREV,
-				env, le());
+				TokenWithTokenReference.TOKENREV, env, le());
 		assertThat(pojoRef.def1, is(equalTo(3)));
 		assertThat(pojoRef.seq1.def1, is(equalTo(1)));
 		assertThat(pojoRef.seq1.def2, is(equalTo(2)));
@@ -70,7 +132,8 @@ public class PojoMapperTest {
 	@Test
 	public void duplicateSubGraph() throws IOException, TokenNotFoundException, TokenConversionException {
 		final Environment env = stream(1, 2, 3, 4, 5, 6);
-		final TokenWithTwoIdenticalSubtokens pojoRef = PojoMapper.fillPojo(TokenWithTwoIdenticalSubtokens.class, TokenWithTwoIdenticalSubtokens.TOKEN, env, le());
+		final TokenWithTwoIdenticalSubtokens pojoRef = PojoMapper.fillPojo(TokenWithTwoIdenticalSubtokens.class,
+				TokenWithTwoIdenticalSubtokens.TOKEN, env, le());
 		assertThat(pojoRef.sub1.def1, is(equalTo(1)));
 		assertThat(pojoRef.sub1.seq1.def1, is(equalTo(2)));
 		assertThat(pojoRef.sub1.seq1.def2, is(equalTo(3)));
@@ -83,7 +146,8 @@ public class PojoMapperTest {
 	@Test
 	public void duplicateSubGraphREV() throws IOException, TokenNotFoundException, TokenConversionException {
 		final Environment env = stream(1, 2, 3, 4, 5, 6);
-		final TokenWithTwoIdenticalSubtokens pojoRef = PojoMapper.fillPojo(TokenWithTwoIdenticalSubtokens.class, TokenWithTwoIdenticalSubtokens.TOKENREV, env, le());
+		final TokenWithTwoIdenticalSubtokens pojoRef = PojoMapper.fillPojo(TokenWithTwoIdenticalSubtokens.class,
+				TokenWithTwoIdenticalSubtokens.TOKENREV, env, le());
 		assertThat(pojoRef.sub2.def1, is(equalTo(1)));
 		assertThat(pojoRef.sub2.seq1.def1, is(equalTo(2)));
 		assertThat(pojoRef.sub2.seq1.def2, is(equalTo(3)));
