@@ -1,12 +1,12 @@
 package io.metal2token.pojo;
 
-import io.parsingdata.metal.data.ParseGraph;
+import io.metal2token.GraphContext;
 import io.parsingdata.metal.data.ParseValue;
 
 public class MapContext {
 
 	private final Class<?> _type;
-	private ParseGraph _parseGraph;
+	private GraphContext _parseGraph;
 	private ParseValue _parseValue;
 
 	public MapContext(final Class<?> type, final ParseValue value) {
@@ -14,7 +14,7 @@ public class MapContext {
 		_parseValue = value;
 	}
 
-	public MapContext(final Class<?> type, final ParseGraph value) {
+	public MapContext(final Class<?> type, final GraphContext value) {
 		_type = type;
 		_parseGraph = value;
 	}
@@ -23,7 +23,7 @@ public class MapContext {
 		return _type;
 	}
 
-	public ParseGraph parseGraph() {
+	public GraphContext parseGraph() {
 		return _parseGraph;
 	}
 

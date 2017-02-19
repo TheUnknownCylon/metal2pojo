@@ -17,7 +17,6 @@ import io.metal2token.pojo.MetalTypeConverter;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.selection.ByName;
 import io.parsingdata.metal.encoding.Encoding;
@@ -26,47 +25,23 @@ import io.parsingdata.metal.token.Token;
 /**
  * Contains all logic to map a {@link ParseGraph} to an instance of a
  * {@link MetalPojo}.
- * 
- * @author Netherlands Forensic Institute
  */
 public final class PojoMapper {
 
-	public static <T> T fillPojo(final Class<T> pojoClass, final Token token, final Environment env,
-			final Encoding enc) throws TokenNotFoundException, TokenConversionException, IOException {
-		return fillPojo(pojoClass, token.parse(env, enc).environment.order);
-	}
-
-	/**
-	 * Method based on a parse graph and a {@link MetalPojo}, create a new
-	 * instance of the pojo.
-	 * 
-	 * @param pojoClass
-	 *            Class of pojo to fill.
-	 * @param graph
-	 *            Parsed graph containing the Pojo.
-	 * @return A filled POJO that is in instance of pojoClass, filled with data
-	 *         from graph.
-	 * 
-	 */
-	public static <T> T fillPojo(final Class<T> pojoClass, final ParseGraph graph)
-			throws TokenNotFoundException, TokenConversionException {
+	public static <T> T fillPojo(final Class<T> pojoClass, final Token token, final Environment env, final Encoding enc)
+			throws TokenNotFoundException, TokenConversionException, IOException {
 
 		final String pojoTokenName = pojoTokenName(pojoClass);
-		System.out.println(graph);
+		return fillPojo(pojoClass, new GraphContext(token.parse(env, enc).environment.order).subGraph(pojoTokenName));
+	}
 
-		// Context switch to sub-graph of pojo token.
-		final ImmutableList<ParseItem> roots = ByTokenName.getAllRoots(graph, pojoTokenName);
-		if (roots.size == 0) {
-			throw new TokenNotFoundException();
-		} else if (roots.size > 1) {
-			throw new TokenConversionException(
-					"Unsupported number of pojo occurences for " + pojoTokenName + " in graph root: " + roots.size);
-		}
+	static <T> T fillPojo(final Class<T> pojoClass, final GraphContext graph)
+			throws TokenNotFoundException, TokenConversionException {
 
 		try {
 			final T pojo = pojoClass.newInstance();
 			for (final Field field : pojoClass.getFields()) {
-				parseField(field, roots.head.asGraph(), pojo);
+				parseField(field, graph, pojo);
 			}
 			return pojo;
 		} catch (final Exception e) {
@@ -74,7 +49,7 @@ public final class PojoMapper {
 		}
 	}
 
-	private static <T> void parseField(final Field field, final ParseGraph graph, final T pojo)
+	private static <T> void parseField(final Field field, final GraphContext graph, final T pojo)
 			throws TokenNotFoundException, TokenConversionException {
 		try {
 			_parseField(field, graph, pojo);
@@ -83,15 +58,15 @@ public final class PojoMapper {
 		}
 	}
 
-	private static <T> void _parseField(final Field field, final ParseGraph graph, final T pojo)
+	private static <T> void _parseField(final Field field, final GraphContext graph, final T pojo)
 			throws TokenNotFoundException, TokenConversionException, InstantiationException, IllegalAccessException {
 
 		if (!(field.isAnnotationPresent(MetalField.class))) {
 			return;
 		}
 
-		final MetalTypeConverter<?> converter = (MetalTypeConverter<?>) field.getAnnotation(MetalField.class).converter()
-				.newInstance();
+		final MetalTypeConverter<?> converter = (MetalTypeConverter<?>) field.getAnnotation(MetalField.class)
+				.converter().newInstance();
 
 		if (List.class.isAssignableFrom(field.getType())) {
 			final List<MapContext> items = toContextList(field, graph);
@@ -122,21 +97,22 @@ public final class PojoMapper {
 	// * mapping / field class can be different
 	// * avoid if(graph) else if(value) pattern in parseField()
 
-	private static List<MapContext> toContextList(final Field field, final ParseGraph graph) {
+	private static List<MapContext> toContextList(final Field field, final GraphContext graph) {
 		final Class<?> innerType = getTargetClass(field);
 
 		final List<MapContext> items = new ArrayList<>();
 
 		if (targetIsPojo(field)) {
 			final String pojoTokenName = pojoTokenName(innerType);
-			ImmutableList<ParseItem> values = ByTokenName.getAllRoots(graph, pojoTokenName).reverse();
-			while (values.size > 0) {
-				items.add(new MapContext(innerType, values.head.asGraph()));
-				values = values.tail;
+			final List<GraphContext> subGraphs = graph.subGraphs(pojoTokenName);
+			for (final GraphContext subGraph : subGraphs) {
+				items.add(new MapContext(innerType, subGraph));
 			}
+
 		} else {
 			final String name = field.getName();
-			ImmutableList<ParseValue> values = ByName.getAllValues(graph.head.asGraph(), name).reverse();
+			ImmutableList<ParseValue> values = ByName.getAllValues(graph.graph(), graph.nameOfParseValue(name))
+					.reverse();
 			while (values.size > 0) {
 				items.add(new MapContext(innerType, values.head));
 				values = values.tail;
@@ -145,12 +121,13 @@ public final class PojoMapper {
 		return items;
 	}
 
-	private static MapContext toContext(final Field field, final ParseGraph graph) {
+	private static MapContext toContext(final Field field, final GraphContext graph) throws TokenNotFoundException {
 		if (targetIsPojo(field)) {
-			return new MapContext(getTargetClass(field), graph);
+			final String pojoTokenName = pojoTokenName(field.getType());
+			return new MapContext(getTargetClass(field), graph.subGraph(pojoTokenName));
 		} else {
 			final String name = field.getName();
-			return new MapContext(getTargetClass(field), ByName.getValue(graph, name));
+			return new MapContext(getTargetClass(field), ByName.getValue(graph.graph(), graph.nameOfParseValue(name)));
 		}
 	}
 
