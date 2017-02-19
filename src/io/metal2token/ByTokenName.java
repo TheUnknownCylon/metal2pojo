@@ -1,4 +1,4 @@
-package mapper;
+package io.metal2token;
 
 import static io.parsingdata.metal.data.ParseResult.failure;
 
@@ -20,7 +20,6 @@ import io.parsingdata.metal.token.TokenRef;
  * 
  * @see ByToken
  * @see ByName.
- * @author Netherlands Forensic Institute
  */
 public class ByTokenName {
 

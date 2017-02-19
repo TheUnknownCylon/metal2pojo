@@ -1,4 +1,4 @@
-package pojo;
+package io.metal2token.pojo;
 
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseValue;
