@@ -34,7 +34,7 @@ public @interface MetalField {
 	/**
 	 * Optional class that converts a ParseValue to another object.
 	 * 
-	 * The converter must be an instance of {@link PojoConverter}. If not, a
+	 * The converter must be an instance of {@link MetalTypeConverter}. If not, a
 	 * {@link ClassCastException} will be thrown.
 	 * 
 	 * @return Class of the converter to be used.

@@ -12,7 +12,7 @@ import io.metal2token.exceptions.TokenNotFoundException;
 import io.metal2token.pojo.MapContext;
 import io.metal2token.pojo.MetalField;
 import io.metal2token.pojo.MetalPojo;
-import io.metal2token.pojo.PojoConverter;
+import io.metal2token.pojo.MetalTypeConverter;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
@@ -86,7 +86,7 @@ public final class PojoMapper {
 			return;
 		}
 
-		final PojoConverter<?> converter = (PojoConverter<?>) field.getAnnotation(MetalField.class).converter()
+		final MetalTypeConverter<?> converter = (MetalTypeConverter<?>) field.getAnnotation(MetalField.class).converter()
 				.newInstance();
 
 		if (List.class.isAssignableFrom(field.getType())) {

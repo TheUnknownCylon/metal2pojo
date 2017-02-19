@@ -3,10 +3,10 @@ package io.metal2token;
 import io.metal2token.exceptions.TokenConversionException;
 import io.metal2token.exceptions.TokenNotFoundException;
 import io.metal2token.pojo.MapContext;
-import io.metal2token.pojo.PojoConverter;
+import io.metal2token.pojo.MetalTypeConverter;
 import io.parsingdata.metal.data.ParseValue;
 
-public class DefaultConverter implements PojoConverter<Object> {
+public class DefaultConverter implements MetalTypeConverter<Object> {
 
 	@Override
 	public Object convert(final MapContext context) throws TokenNotFoundException, TokenConversionException {
