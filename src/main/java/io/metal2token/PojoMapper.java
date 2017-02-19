@@ -129,7 +129,7 @@ public final class PojoMapper {
 
 		if (targetIsPojo(field)) {
 			final String pojoTokenName = pojoTokenName(innerType);
-			ImmutableList<ParseItem> values = ByTokenName.getAllRoots(graph.head.asGraph(), pojoTokenName).reverse();
+			ImmutableList<ParseItem> values = ByTokenName.getAllRoots(graph, pojoTokenName).reverse();
 			while (values.size > 0) {
 				items.add(new MapContext(innerType, values.head.asGraph()));
 				values = values.tail;
