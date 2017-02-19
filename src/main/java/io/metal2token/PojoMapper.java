@@ -1,5 +1,6 @@
 package io.metal2token;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -13,11 +14,14 @@ import io.metal2token.pojo.MapContext;
 import io.metal2token.pojo.MetalField;
 import io.metal2token.pojo.MetalPojo;
 import io.metal2token.pojo.MetalTypeConverter;
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.selection.ByName;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
 
 /**
  * Contains all logic to map a {@link ParseGraph} to an instance of a
@@ -26,6 +30,11 @@ import io.parsingdata.metal.data.selection.ByName;
  * @author Netherlands Forensic Institute
  */
 public final class PojoMapper {
+
+	public static <T> T fillPojo(final Class<T> pojoClass, final Token token, final Environment env,
+			final Encoding enc) throws TokenNotFoundException, TokenConversionException, IOException {
+		return fillPojo(pojoClass, token.parse(env, enc).environment.order);
+	}
 
 	/**
 	 * Method based on a parse graph and a {@link MetalPojo}, create a new
@@ -38,17 +47,12 @@ public final class PojoMapper {
 	 * @return A filled POJO that is in instance of pojoClass, filled with data
 	 *         from graph.
 	 * 
-	 * @throws IllegalArgumentException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws MetalRefNotFound
-	 * @throws MetalTokenConversionException
-	 * @throws MetalPojoFillerException
 	 */
 	public static <T> T fillPojo(final Class<T> pojoClass, final ParseGraph graph)
 			throws TokenNotFoundException, TokenConversionException {
 
 		final String pojoTokenName = pojoTokenName(pojoClass);
+		System.out.println(graph);
 
 		// Context switch to sub-graph of pojo token.
 		final ImmutableList<ParseItem> roots = ByTokenName.getAllRoots(graph, pojoTokenName);
