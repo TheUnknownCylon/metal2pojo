@@ -11,15 +11,18 @@ import io.metal2pojo.pojo.MetalField;
 import io.metal2pojo.pojo.MetalPojo;
 import io.parsingdata.metal.token.Token;
 
-@MetalPojo("repntoken")
+/**
+ * Token that is used to test repn.
+ */
+@MetalPojo("RepnToken")
 public class RepnToken {
 
 	@MetalField
-	public List<SimpleSequencePojo> simpleToken;
+	public List<SimpleSequenceToken> simpleToken;
 
 	@MetalField
 	public List<Integer> s;
 
-	public static Token TOKEN = seq("repntoken", repn(SimpleSequencePojo.TOKEN, con(2)), repn(def("s", 1), con(2)));
+	public static Token TOKEN = seq("RepnToken", repn(SimpleSequenceToken.TOKEN, con(2)), repn(def("s", 1), con(2)));
 
 }

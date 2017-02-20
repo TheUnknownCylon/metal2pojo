@@ -7,15 +7,20 @@ import io.metal2pojo.pojo.MetalField;
 import io.metal2pojo.pojo.MetalPojo;
 import io.parsingdata.metal.token.Token;
 
-@MetalPojo("seq2")
-public class SimpleSequencePojo2 {
+/**
+ * Most basic form of a token.
+ * 
+ * Contains 2 integer definitions.
+ */
+@MetalPojo("SimpleSequenceToken")
+public class SimpleSequenceToken {
+
 	@MetalField
 	public int def1;
 
 	@MetalField
-	public SimpleSequencePojo seq1;
+	public int def2;
 
-	public static final Token TOKEN = seq("seq2", def("def1", 1), SimpleSequencePojo.TOKEN);
+	public static final Token TOKEN = seq("SimpleSequenceToken", def("def1", 1), def("def2", 1));
 
-	public static final Token TOKENREV = seq("seq2", SimpleSequencePojo.TOKEN, def("def1", 1));
 }
