@@ -1,4 +1,4 @@
-package io.metal2token.pojo;
+package io.metal2pojo.pojo;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.util.Optional;
 
-import io.metal2token.DefaultConverter;
+import io.metal2pojo.DefaultConverter;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
 import io.parsingdata.metal.token.Token;

@@ -1,9 +1,9 @@
-package io.metal2token;
+package io.metal2pojo;
 
-import io.metal2token.exceptions.TokenConversionException;
-import io.metal2token.exceptions.TokenNotFoundException;
-import io.metal2token.pojo.MapContext;
-import io.metal2token.pojo.MetalTypeConverter;
+import io.metal2pojo.exceptions.TokenConversionException;
+import io.metal2pojo.exceptions.TokenNotFoundException;
+import io.metal2pojo.pojo.MapContext;
+import io.metal2pojo.pojo.MetalTypeConverter;
 import io.parsingdata.metal.data.ParseValue;
 
 public class DefaultConverter implements MetalTypeConverter<Object> {

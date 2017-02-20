@@ -1,4 +1,4 @@
-package metal2pojo;
+package io.metal2pojo;
 
 import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
@@ -10,14 +10,14 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import io.metal2token.PojoMapper;
-import io.metal2token.exceptions.TokenConversionException;
-import io.metal2token.exceptions.TokenNotFoundException;
+import io.metal2pojo.PojoMapper;
+import io.metal2pojo.exceptions.TokenConversionException;
+import io.metal2pojo.exceptions.TokenNotFoundException;
+import io.metal2pojo.testtokens.RepnToken;
+import io.metal2pojo.testtokens.SimpleSequencePojo;
+import io.metal2pojo.testtokens.SimpleSequencePojo2;
+import io.metal2pojo.testtokens.SubToken;
 import io.parsingdata.metal.data.Environment;
-import metal2pojo.testtokens.RepnToken;
-import metal2pojo.testtokens.SimpleSequencePojo;
-import metal2pojo.testtokens.SimpleSequencePojo2;
-import metal2pojo.testtokens.SubToken;
 
 public class PojoMapperTest {
 

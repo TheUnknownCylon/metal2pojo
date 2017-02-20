@@ -1,6 +1,6 @@
-package io.metal2token.pojo;
+package io.metal2pojo.pojo;
 
-import io.metal2token.GraphContext;
+import io.metal2pojo.GraphContext;
 import io.parsingdata.metal.data.ParseValue;
 
 public class MapContext {

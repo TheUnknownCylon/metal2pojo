@@ -1,4 +1,4 @@
-package io.metal2token.exceptions;
+package io.metal2pojo.exceptions;
 
 /**
  * Indicates that a conversion did not occur because token to be converted could

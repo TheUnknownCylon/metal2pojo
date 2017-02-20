@@ -1,4 +1,4 @@
-package io.metal2token;
+package io.metal2pojo;
 
 import static io.parsingdata.metal.data.ParseResult.failure;
 

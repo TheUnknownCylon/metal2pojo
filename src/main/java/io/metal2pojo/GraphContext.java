@@ -1,9 +1,9 @@
-package io.metal2token;
+package io.metal2pojo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.metal2token.exceptions.TokenNotFoundException;
+import io.metal2pojo.exceptions.TokenNotFoundException;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;

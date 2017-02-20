@@ -1,4 +1,4 @@
-package io.metal2token.pojo;
+package io.metal2pojo.pojo;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
