@@ -4,9 +4,9 @@
 
 This package contains some utilities to map a Metal parse graph to a Java Pojo.
 
-[Metal](https://github.com/parsingdata/metal) is "a Java library for parsing 
-binary data formats, using declarative descriptions". The description of a 
-format can be defined in a very strong way. However, the output of a parsed 
+[Metal](https://github.com/parsingdata/metal) is "a Java library for parsing
+binary data formats, using declarative descriptions". The description of a
+format can be defined in a very strong way. However, the output of a parsed
 byte string is simply returned as a parse graph. This package is an attempt to
 make the use of such a parse graph more easy, by providing a way to map the
 parse graph to a more simple to use Java object.
@@ -18,7 +18,7 @@ to the correct type and sets the fields in a newly created instance of the
 simple Java object.
 
 
-**DISCLAIMER** The work in this package is not well tested. Please consider 
+**DISCLAIMER** The work in this package is not well tested. Please consider
 this as a Proof Of Concept.
 
 
@@ -26,14 +26,14 @@ this as a Proof Of Concept.
 
 There are two annotations that have to be used to describe a mapping:
 
-* `MetalPojo`, annotate on your Pojo class, to indicate that this Pojo maps to 
+* `MetalPojo`, annotate on your Pojo class, to indicate that this Pojo maps to
    a Metal Token.
 * `MetalField`, annotate on a field fields of a MetalPojo annotated class.
    Indicates that the field maps to a value or Token in a parse graph.
 
 ### SEQ as a simple token
 
-**IMPORTANT** Only named sequences can be mapped from a Metal parse graph to a 
+**IMPORTANT** Only named sequences can be mapped from a Metal parse graph to a
 Pojo.
 
 Example TOKEN (see [PNG format](https://github.com/parsingdata/metal/blob/master/formats/src/main/java/io/parsingdata/metal/format/PNG.java)):
@@ -51,19 +51,19 @@ Example Pojo:
 
     @MetalPojo("chunk")  // value must match 'name' of token
     public class PNGCHunk {
-    
+
     	@MetalField // maps the 4 bytes value chunk.length to a long
     	public long length;
-    	
+
     	@MetalField
     	public String chunktype;
-    	
+
     	@MetalField
     	public String chunkdata;
-    	
+
     	@MetalField
     	public long crc32;
-    	
+
     }
 
 
@@ -86,13 +86,13 @@ Example POJO:
       @MetalField
       public Header header; // Header is a class also annotated with @MetalPojo
                             // Field name does not matter because anoter Pojo is referenced
-      
+
       @MetalField
       public List<Struct> struct;
-      
+
       @MetalField
       public Footer footer;
-      
+
     }
 
 
@@ -117,15 +117,15 @@ was present in the parse graph.
 
 By default Metal2Pojo supports the following types:
 
- * Integer values (`long`, `Long`)
- * Long values (`int`, `Integer`)
+ * Long values (`long`, `Long`)
+ * Integer values (`int`, `Integer`)
  * String values (`String`)
  * Other tokens (classes annotated with `@MetalPojo`)a
 
 Additionally, it is possible to define a custom converter. Converters
 must implement the `MetalTypeConverter` interface. Currently only `ParseValue`s
 in a parse graph can be converted (as opposed to sub-parse graphs that can not
-be converted yet). The argument `MetalField.converter`can be used to set a 
+be converted yet). The argument `MetalField.converter`can be used to set a
 different type converter:
 
     @MetalField(converter = MyConverter.class)
