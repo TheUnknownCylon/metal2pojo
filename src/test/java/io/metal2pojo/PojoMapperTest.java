@@ -8,7 +8,9 @@ import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import io.metal2pojo.exceptions.TokenConversionException;
 import io.metal2pojo.exceptions.TokenNotFoundException;
@@ -19,9 +21,15 @@ import io.metal2pojo.testtokens.TokenWithTwoIdenticalSubtokens;
 import io.metal2pojo.testtokens.cho.ChoParseGraphToken;
 import io.metal2pojo.testtokens.cho.ChoParseMixedToken;
 import io.metal2pojo.testtokens.cho.ChoParseValueToken;
+import io.metal2pojo.testtokens.errors.FieldNotInToken;
+import io.metal2pojo.testtokens.errors.NoMetalPojo;
+import io.metal2pojo.testtokens.errors.TokenRefsNonMetalToken;
 import io.parsingdata.metal.data.Environment;
 
 public class PojoMapperTest {
+
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void testSimpleToken() throws IOException, TokenNotFoundException, TokenConversionException {
@@ -52,7 +60,8 @@ public class PojoMapperTest {
 	public void testChoParseValueToken() throws IOException, TokenNotFoundException, TokenConversionException {
 		{
 			final Environment env = stream(1);
-			final ChoParseValueToken pojo = PojoMapper.fillPojo(ChoParseValueToken.class, ChoParseValueToken.TOKEN, env, le());
+			final ChoParseValueToken pojo = PojoMapper.fillPojo(ChoParseValueToken.class, ChoParseValueToken.TOKEN, env,
+					le());
 			assertThat(pojo.value1.isPresent(), is(true));
 			assertThat(pojo.value2.isPresent(), is(false));
 			assertThat(pojo.value1.get(), is(equalTo(1)));
@@ -60,7 +69,8 @@ public class PojoMapperTest {
 		{
 
 			final Environment env = stream(10);
-			final ChoParseValueToken pojo = PojoMapper.fillPojo(ChoParseValueToken.class, ChoParseValueToken.TOKEN, env, le());
+			final ChoParseValueToken pojo = PojoMapper.fillPojo(ChoParseValueToken.class, ChoParseValueToken.TOKEN, env,
+					le());
 			assertThat(pojo.value1.isPresent(), is(false));
 			assertThat(pojo.value2.isPresent(), is(true));
 			assertThat(pojo.value2.get(), is(equalTo(10L)));
@@ -157,4 +167,27 @@ public class PojoMapperTest {
 		assertThat(pojoRef.sub1.seq1.def2, is(equalTo(6)));
 	}
 
+	@Test
+	public void tokenRefsNonMetalToken() throws IOException, TokenNotFoundException, TokenConversionException {
+		final Environment env = stream(1);
+		thrown.expect(TokenConversionException.class);
+		thrown.expectMessage(
+				"Unknown type to interpret: class java.math.BigDecimal for value: TokenRefsNonMetalToken.def1(0x01)");
+		PojoMapper.fillPojo(TokenRefsNonMetalToken.class, TokenRefsNonMetalToken.TOKEN, env, le());
+	}
+
+	@Test
+	public void tokenIsNotAMetalPojo() throws IOException, TokenNotFoundException, TokenConversionException {
+		final Environment env = stream(1, 2);
+		thrown.expect(IllegalStateException.class);
+		thrown.expectMessage("Not a metal pojo");
+		PojoMapper.fillPojo(NoMetalPojo.class, NoMetalPojo.TOKEN, env, le());
+	}
+
+	@Test
+	public void fieldNotInToken() throws IOException, TokenNotFoundException, TokenConversionException {
+		final Environment env = stream(1, 2);
+		thrown.expect(TokenConversionException.class);
+		PojoMapper.fillPojo(FieldNotInToken.class, FieldNotInToken.TOKEN, env, le());
+	}
 }

@@ -5,10 +5,6 @@ package io.metal2pojo.exceptions;
  */
 public class TokenConversionException extends Exception {
 
-	public TokenConversionException(final String string) {
-		super(string);
-	}
-
 	public TokenConversionException(final Exception e) {
 		super(e);
 	}
