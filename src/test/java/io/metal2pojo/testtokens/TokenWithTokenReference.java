@@ -11,12 +11,12 @@ import io.parsingdata.metal.token.Token;
  * Basic token that references another token: {@link SimpleSequenceToken}
  */
 @MetalPojo("TokenWithTokenReference")
-public class TokenWithTokenReference {
+public interface TokenWithTokenReference {
 	@MetalField
-	public int def1;
+	public int def1();
 
 	@MetalField
-	public SimpleSequenceToken seq1;
+	public SimpleSequenceToken seq1();
 
 	public static final Token TOKEN = seq("TokenWithTokenReference", def("def1", 1), SimpleSequenceToken.TOKEN);
 

@@ -28,8 +28,8 @@ There are two annotations that have to be used to describe a mapping:
 
 * `MetalPojo`, annotate on your Pojo class, to indicate that this Pojo maps to
    a Metal Token.
-* `MetalField`, annotate on a field fields of a MetalPojo annotated class.
-   Indicates that the field maps to a value or Token in a parse graph.
+* `MetalField`, annotate on a method of a MetalPojo annotated class.
+   Indicates that the method maps to a value or Token in a parse graph.
 
 ### SEQ as a simple token
 
@@ -47,23 +47,14 @@ Example TOKEN (see [PNG format](https://github.com/parsingdata/metal/blob/master
                 def("crc32", con(4), eq(crc32(cat(last(ref("chunktype")), last(ref("chunkdata")))))));
 
 
-Example Pojo:
+Example Pojo (method names are equal to name in the `def`ines):
 
     @MetalPojo("chunk")  // value must match 'name' of token
-    public class PNGCHunk {
-
-    	@MetalField // maps the 4 bytes value chunk.length to a long
-    	public long length;
-
-    	@MetalField
-    	public String chunktype;
-
-    	@MetalField
-    	public String chunkdata;
-
-    	@MetalField
-    	public long crc32;
-
+    public interface PNGCHunk {
+    	@MetalField public long length();
+    	@MetalField public String chunktype();
+    	@MetalField public String chunkdata();
+    	@MetalField public long crc32();
     }
 
 
@@ -81,17 +72,19 @@ Example Token:
 Example POJO:
 
     @MetalPojo(value = "PNG")
-    public class PNG {
+    public interface PNG {
 
-      @MetalField
-      public Header header; // Header is a class also annotated with @MetalPojo
-                            // Field name does not matter because anoter Pojo is referenced
+      // Header is a class also annotated with @MetalPojo
+      // Method name does not matter because anoter Pojo is referenced
+      @MetalField 
+      public Header header(); 
 
-      @MetalField
-      public List<Struct> struct;
+      // rep and repn are represented by lists (where Struct is a Token)
+      @MetalField 
+      public List<Struct> struct();
 
-      @MetalField
-      public Footer footer;
+      @MetalField 
+      public Footer footer();
 
     }
 
@@ -107,10 +100,10 @@ type in the parse graph. Use the Optional API to check which of the elements
 was present in the parse graph.
 
     @MetalField
-    Optional<TOKENA> tokenA;  // field name does not matter
+    public Optional<TOKENA> tokenA();
 
     @MetalField
-    Optional<TOKENB> tokenB;
+    public Optional<TOKENB> tokenB();
 
 
 ### Supported types:
@@ -129,7 +122,7 @@ be converted yet). The argument `MetalField.converter`can be used to set a
 different type converter:
 
     @MetalField(converter = MyConverter.class)
-    public MyType foo;
+    public MyType foo();
 
 
 ### Limitations

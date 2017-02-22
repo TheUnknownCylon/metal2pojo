@@ -10,10 +10,10 @@ import io.metal2pojo.pojo.MetalPojo;
 import io.parsingdata.metal.token.Token;
 
 @MetalPojo("ChoToken1")
-public class ChoToken1 {
+public interface ChoToken1 {
 
 	@MetalField
-	public Integer value1;
+	public Integer value1();
 
 	public static Token TOKEN = seq("ChoToken1", def("value1", 1, ltNum(con(9))), def("dontcare", 0));
 

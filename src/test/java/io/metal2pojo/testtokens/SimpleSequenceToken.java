@@ -13,13 +13,13 @@ import io.parsingdata.metal.token.Token;
  * Contains 2 integer definitions.
  */
 @MetalPojo("SimpleSequenceToken")
-public class SimpleSequenceToken {
+public interface SimpleSequenceToken {
 
 	@MetalField
-	public int def1;
+	public int def1();
 
 	@MetalField
-	public int def2;
+	public int def2();
 
 	public static final Token TOKEN = seq("SimpleSequenceToken", def("def1", 1), def("def2", 1));
 

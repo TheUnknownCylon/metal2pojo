@@ -15,13 +15,13 @@ import io.parsingdata.metal.token.Token;
  * Token that is used to test repn.
  */
 @MetalPojo("RepnToken")
-public class RepnToken {
+public interface RepnToken {
 
 	@MetalField
-	public List<SimpleSequenceToken> simpleToken;
+	public List<SimpleSequenceToken> simpleToken();
 
 	@MetalField
-	public List<Integer> s;
+	public List<Integer> s();
 
 	public static Token TOKEN = seq("RepnToken", repn(SimpleSequenceToken.TOKEN, con(2)), repn(def("s", 1), con(2)));
 

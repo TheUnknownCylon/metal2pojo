@@ -7,13 +7,13 @@ import io.metal2pojo.pojo.MetalPojo;
 import io.parsingdata.metal.token.Token;
 
 @MetalPojo("superOfTwoSubs")
-public class TokenWithTwoIdenticalSubtokens {
+public interface TokenWithTwoIdenticalSubtokens {
 
 	@MetalField
-	public TokenWithTokenReference sub1;
+	public TokenWithTokenReference sub1();
 
 	@MetalField
-	public TokenWithTokenReference2 sub2;
+	public TokenWithTokenReference2 sub2();
 
 	public static Token TOKEN = seq("superOfTwoSubs", TokenWithTokenReference.TOKEN, TokenWithTokenReference2.TOKEN);
 

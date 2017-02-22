@@ -11,13 +11,13 @@ import io.metal2pojo.pojo.MetalPojo;
 import io.parsingdata.metal.token.Token;
 
 @MetalPojo("ChoParseGraphToken")
-public class ChoParseGraphToken {
+public interface ChoParseGraphToken {
 
 	@MetalField
-	public Optional<ChoToken1> value1;
+	public Optional<ChoToken1> value1();
 
 	@MetalField
-	public Optional<ChoToken2> value2;
+	public Optional<ChoToken2> value2();
 
 	public static Token TOKEN = seq("ChoParseGraphToken", cho(ChoToken1.TOKEN, ChoToken2.TOKEN), def("dontcare", 0));
 }

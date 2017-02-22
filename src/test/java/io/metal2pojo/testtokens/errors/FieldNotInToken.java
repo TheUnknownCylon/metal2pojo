@@ -8,10 +8,10 @@ import io.metal2pojo.pojo.MetalPojo;
 import io.parsingdata.metal.token.Token;
 
 @MetalPojo("FieldNotInToken")
-public class FieldNotInToken {
+public interface FieldNotInToken {
 
 	@MetalField
-	public int notintoken;
+	public int notintoken();
 
 	public static final Token TOKEN = seq("FieldNotInToken", def("def1", 1), def("def2", 1));
 

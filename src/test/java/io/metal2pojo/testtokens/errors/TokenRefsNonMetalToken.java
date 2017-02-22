@@ -10,10 +10,10 @@ import io.metal2pojo.pojo.MetalPojo;
 import io.parsingdata.metal.token.Token;
 
 @MetalPojo("TokenRefsNonMetalToken")
-public class TokenRefsNonMetalToken {
+public interface TokenRefsNonMetalToken {
 
 	@MetalField
-	public BigDecimal def1;
+	public BigDecimal def1();
 
 	public static final Token TOKEN = seq("TokenRefsNonMetalToken", def("def1", 1), def("dc", 0));
 
